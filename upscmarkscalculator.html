@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPSC Prelims Marks Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7f6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .container {
+            background: #fff;
+            padding: 20px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        input[type="text"], input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        .paper-section {
+            background: #f9f9f9;
+            padding: 15px;
+            border-left: 4px solid #59bcef; 
+            margin-bottom: 20px;
+        }
+        button {
+            display: inline-block;
+            background-color: #59bcef; 
+            color: #000; 
+            font-weight: bold;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #48a6d8;
+        }
+        .btn-secondary {
+            background-color: #2ecc71;
+            color: #fff;
+        }
+        .btn-secondary:hover {
+            background-color: #27ae60;
+        }
+        
+        /* Report Section Styles */
+        #reportSection {
+            display: none;
+            background: #fff;
+            padding: 40px;
+            border: 1px solid #ccc;
+            margin-top: 30px;
+            font-family: Arial, sans-serif;
+        }
+        .print-timestamp {
+            text-align: left;
+            font-size: 12px;
+            color: #555;
+            margin-bottom: 30px;
+        }
+        .report-title {
+            text-align: center;
+            font-weight: bold;
+            font-size: 20px;
+            margin-bottom: 5px;
+        }
+        .report-subtitle {
+            text-align: center;
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        /* Specific Font Class for Keywords */
+        .tahoma-bold {
+            font-family: "Tahoma", sans-serif !important;
+            font-weight: bold !important;
+        }
+        
+        /* Table Styles for Boxes */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 25px;
+        }
+        th, td {
+            border: 1px solid #000;
+            padding: 12px;
+            text-align: left;
+        }
+        th {
+            background-color: #59bcef;
+            color: #000;
+            width: 30%;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background-color: #fff;
+                margin: 0;
+                padding: 0;
+            }
+            .no-print {
+                display: none !important;
+            }
+            #reportSection {
+                display: block !important;
+                border: none;
+                box-shadow: none;
+                padding: 0;
+                margin: 0;
+            }
+            /* Ensuring background colors print correctly */
+            th {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container no-print">
+        <h1>UPSC Prelims Marks Calculator</h1>
+        
+        <div class="form-group">
+            <label for="name">Candidate Name:</label>
+            <input type="text" id="name" placeholder="Enter your full name">
+        </div>
+        <div class="form-group">
+            <label for="rollNumber">Roll Number:</label>
+            <input type="text" id="rollNumber" placeholder="Enter your roll number">
+        </div>
+
+        <div class="paper-section">
+            <h2>Paper I (General Studies)</h2>
+            <p>Total Questions: 100 | Marks per Correct: 2 | Penalty per Wrong: -0.66</p>
+            <div class="form-group">
+                <label for="p1Attempted">Questions Attempted:</label>
+                <input type="number" id="p1Attempted" min="0" max="100" value="0">
+            </div>
+            <div class="form-group">
+                <label for="p1Wrong">Questions Wrong:</label>
+                <input type="number" id="p1Wrong" min="0" max="100" value="0">
+            </div>
+        </div>
+
+        <div class="paper-section">
+            <h2>Paper II (CSAT)</h2>
+            <p>Total Questions: 80 | Marks per Correct: 2.5 | Penalty per Wrong: -0.83</p>
+            <div class="form-group">
+                <label for="p2Attempted">Questions Attempted:</label>
+                <input type="number" id="p2Attempted" min="0" max="80" value="0">
+            </div>
+            <div class="form-group">
+                <label for="p2Wrong">Questions Wrong:</label>
+                <input type="number" id="p2Wrong" min="0" max="80" value="0">
+            </div>
+        </div>
+
+        <button onclick="calculateMarks()">Calculate Marks</button>
+    </div>
+
+    <div id="reportSection">
+        <div class="print-timestamp" id="timestampDisplay"></div>
+        
+        <div class="report-title">UPSC Prelim Examination Calculator</div>
+        <div class="report-subtitle tahoma-bold">Civil Service Examination</div>
+        
+        <table>
+            <tbody>
+                <tr>
+                    <th class="tahoma-bold" style="background-color: transparent;">Roll Number</th>
+                    <td id="displayRollNumber"></td>
+                </tr>
+                <tr>
+                    <th class="tahoma-bold" style="background-color: transparent;">Name</th>
+                    <td id="displayName"></td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <table>
+            <thead>
+                <tr>
+                    <th style="background-color: transparent;"></th>
+                    <th class="tahoma-bold" style="background-color: transparent; width: 70%;">Marks Obtained</th> 
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="tahoma-bold" style="background-color: transparent;">Paper I</th>
+                    <td id="displayP1Marks">0.00</td>
+                </tr>
+                <tr>
+                    <th class="tahoma-bold" style="background-color: transparent;">Paper II</th>
+                    <td id="displayP2Marks">0.00</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="no-print">
+            <button class="btn-secondary" onclick="window.print()">Download Report (PDF)</button>
+        </div>
+    </div>
+
+    <script>
+        function formatTimestamp() {
+            const now = new Date();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const year = now.getFullYear().toString().slice(-2);
+            let hours = now.getHours();
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'PM' : 'AM';
+            hours = hours % 12;
+            hours = hours ? hours : 12; 
+            return `${month}/${day}/${year}, ${hours}:${minutes} ${ampm}`;
+        }
+
+        function calculateMarks() {
+            // Get User Info
+            const name = document.getElementById('name').value.trim();
+            const rollNumber = document.getElementById('rollNumber').value.trim();
+
+            // Get Paper 1 Inputs
+            const p1Attempted = parseInt(document.getElementById('p1Attempted').value) || 0;
+            const p1Wrong = parseInt(document.getElementById('p1Wrong').value) || 0;
+            
+            // Get Paper 2 Inputs
+            const p2Attempted = parseInt(document.getElementById('p2Attempted').value) || 0;
+            const p2Wrong = parseInt(document.getElementById('p2Wrong').value) || 0;
+
+            // Validate Inputs
+            if (p1Wrong > p1Attempted || p2Wrong > p2Attempted) {
+                alert("Wrong questions cannot be greater than attempted questions.");
+                return;
+            }
+
+            // Paper 1 Calculation
+            const p1Correct = p1Attempted - p1Wrong;
+            const p1Score = (p1Correct * 2) - (p1Wrong * (2/3));
+
+            // Paper 2 Calculation
+            const p2Correct = p2Attempted - p2Wrong;
+            const p2Score = (p2Correct * 2.5) - (p2Wrong * (2.5/3));
+
+            // Update Report UI
+            document.getElementById('timestampDisplay').innerText = formatTimestamp();
+            document.getElementById('displayName').innerText = name;
+            document.getElementById('displayRollNumber').innerText = rollNumber;
+            document.getElementById('displayP1Marks').innerText = p1Score.toFixed(2);
+            document.getElementById('displayP2Marks').innerText = p2Score.toFixed(2);
+
+            // Show the report section
+            document.getElementById('reportSection').style.display = 'block';
+            
+            // Scroll to report
+            document.getElementById('reportSection').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
